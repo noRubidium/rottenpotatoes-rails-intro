@@ -1,5 +1,4 @@
 class MoviesController < ApplicationController
-
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
@@ -11,19 +10,41 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @debug = 0
-    sort = params[:sort]
-    
+    @all_ratings =  ['G','PG','PG-13','R']
+    @checked = Hash.new
+    @rating_list = Array.new
+    sort =params[:sort]
+    @debug = ""
+    @movies = Movie.all
+    if params[:commit] == "Refresh"
+      @ratings = params[:ratings]
+      @all_ratings.each do |rating|
+        if @ratings[rating] == '1'
+          @checked[rating] = true
+          @rating_list << rating
+        else
+          @checked[rating] = false
+        end
+      end
+      @movies = Movie.where(rating: @rating_list)
+      if @movies == nil
+        @debug += "Here"
+        @all_ratings.each do |rating|
+          @checked[rating] = true
+        end
+        @movies = Movie.all
+      end
+    else
+      @all_ratings.each do |rating|
+        @checked[rating] = true
+      end
+    end
     if sort == "title"
-      @debug = 1
-      @movies = Movie.order("title")
+      @movies.order!("title")
       @title_class = "hilite"
     elsif sort == "release_date"
-      @debug = 2
-      @movies = Movie.order("release_date")
+      @movies.order!("release_date")
       @release_date_class = "hilite"
-    else
-      @movies = Movie.all
     end
   end
 
