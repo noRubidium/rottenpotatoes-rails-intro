@@ -10,16 +10,23 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @redirect = false
     @all_ratings =  ['G','PG','PG-13','R']
     @checked = Hash.new
     @rating_list = Array.new
     if params[:sort]
       session[:sort] = params[:sort]
+      @redirect = true
     end
     
     if params[:ratings]
       session[:ratings] = params[:ratings]
+      @redirect = true
     end
+    if @redirect
+      redirect_to movies_path
+    end
+    
     sort = session[:sort]
     @ratings = session[:ratings]
     @movies = Movie.all
@@ -47,6 +54,8 @@ class MoviesController < ApplicationController
       @movies.order!("release_date")
       @release_date_class = "hilite"
     end
+    
+    
   end
 
   def new
