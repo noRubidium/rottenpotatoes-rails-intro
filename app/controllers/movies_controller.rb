@@ -16,19 +16,22 @@ class MoviesController < ApplicationController
     @rating_list = Array.new
     if params[:sort]
       session[:sort] = params[:sort]
+    elsif session[:sort]
       @redirect = true
     end
     
     if params[:ratings]
       session[:ratings] = params[:ratings]
+    elsif session[:ratings] 
       @redirect = true
-    end
-    if @redirect
-      redirect_to movies_path
     end
     
     sort = session[:sort]
     @ratings = session[:ratings]
+    
+    if @redirect
+      redirect_to :sort => sort, :ratings => @ratings
+    end
     @movies = Movie.all
     if @ratings
       @all_ratings.each do |rating|
@@ -54,8 +57,6 @@ class MoviesController < ApplicationController
       @movies.order!("release_date")
       @release_date_class = "hilite"
     end
-    
-    
   end
 
   def new
