@@ -17,9 +17,11 @@ class MoviesController < ApplicationController
     if sort == "title"
       @debug = 1
       @movies = Movie.order("title")
+      @title_class = "hilite"
     elsif sort == "release_date"
       @debug = 2
       @movies = Movie.order("release_date")
+      @release_date_class = "hilite"
     else
       @movies = Movie.all
     end
