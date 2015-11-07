@@ -13,11 +13,17 @@ class MoviesController < ApplicationController
     @all_ratings =  ['G','PG','PG-13','R']
     @checked = Hash.new
     @rating_list = Array.new
-    sort =params[:sort]
-    @debug = ""
+    if params[:sort]
+      session[:sort] = params[:sort]
+    end
+    
+    if params[:ratings]
+      session[:ratings] = params[:ratings]
+    end
+    sort = session[:sort]
+    @ratings = session[:ratings]
     @movies = Movie.all
-    if params[:commit] == "Refresh"
-      @ratings = params[:ratings]
+    if @ratings
       @all_ratings.each do |rating|
         if @ratings[rating] == '1'
           @checked[rating] = true
@@ -27,18 +33,13 @@ class MoviesController < ApplicationController
         end
       end
       @movies = Movie.where(rating: @rating_list)
-      if @movies == nil
-        @debug += "Here"
-        @all_ratings.each do |rating|
-          @checked[rating] = true
-        end
-        @movies = Movie.all
-      end
     else
       @all_ratings.each do |rating|
         @checked[rating] = true
       end
+      @movies = Movie.all
     end
+    
     if sort == "title"
       @movies.order!("title")
       @title_class = "hilite"
