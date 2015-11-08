@@ -10,18 +10,26 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @redirect = false
-    @all_ratings =  ['G','PG','PG-13','R']
-    @checked = Hash.new
-    @rating_list = Array.new
+    
+    #define variables
+    @redirect = false #check if we need redirect to get RESTful URL
+    @all_ratings =  ['G','PG','PG-13','R'] #define all the ratings
+    @checked = Hash.new #Check box checked?
+    @rating_list = Array.new #all the ratings that needs to be filtered
+    
+    #check if sort is in parameter
     if params[:sort]
       session[:sort] = params[:sort]
+    # if not take session as parameter(if exists)
     elsif session[:sort]
       @redirect = true
     end
     
+    # Check if rating in params
     if params[:ratings]
       session[:ratings] = params[:ratings]
+    
+    # if not take session's rating as param ( if exists)
     elsif session[:ratings] 
       @redirect = true
     end
@@ -32,7 +40,8 @@ class MoviesController < ApplicationController
     if @redirect
       redirect_to :sort => sort, :ratings => @ratings
     end
-    @movies = Movie.all
+    
+    #filter the ratings
     if @ratings
       @all_ratings.each do |rating|
         if @ratings[rating] == '1'
@@ -50,6 +59,7 @@ class MoviesController < ApplicationController
       @movies = Movie.all
     end
     
+    # sort
     if sort == "title"
       @movies.order!("title")
       @title_class = "hilite"
