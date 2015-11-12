@@ -1,11 +1,8 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the weekly assignmen for the online course " Engineering Software as a Service, Part 1" conducted by UC Berkeley.
 
-Things you may want to cover:
-
-* Ruby version
+* Ruby version: 
 
 * System dependencies
 
@@ -24,5 +21,4 @@ Things you may want to cover:
 * ...
 
 
-Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
